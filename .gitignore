@@ -1,0 +1,27 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+node_modules/
+
+# PHP / Composer (if used later)
+vendor/
+composer.lock
+
+# Environment specific
+config/db.local.php
+.env
+
+# Logs and caches
+*.log
+*.sql
+cache/
+storage/
+
+# Build artifacts
+dist/
+build/
+
+# Admin utilities (do not commit)
+pages/admin_reset.php
+pages/password_hash.php
