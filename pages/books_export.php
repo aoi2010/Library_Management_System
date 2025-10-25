@@ -14,9 +14,9 @@ if ($type === 'json') {
   header('Content-Type: text/csv');
   header('Content-Disposition: attachment; filename="books.csv"');
   $out = fopen('php://output', 'w');
-  fputcsv($out, ['id','title','author','isbn','category','year','publisher','quantity','cover_url']);
+    fputcsv($out, ['id','title','author','isbn','category','year','publisher','quantity','cover_url'], ',', '"', '\\');
   foreach ($pdo->query('SELECT id,title,author,isbn,category,year,publisher,quantity,cover_url FROM books ORDER BY id') as $row) {
-    fputcsv($out, $row);
+      fputcsv($out, $row, ',', '"', '\\');
   }
 }
 exit;

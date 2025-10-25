@@ -8,9 +8,10 @@ if (isset($_GET['export']) && $_GET['export']==='inventory_csv') {
   header('Content-Type: text/csv');
   header('Content-Disposition: attachment; filename="inventory.csv"');
   $out = fopen('php://output', 'w');
-  fputcsv($out, ['ID','Title','Author','ISBN','Category','Year','Publisher','Quantity']);
+  fputcsv($out, ['ID','Title','Author','ISBN','Category','Year','Publisher','Quantity'], ',', '"', '\\');
+    // Removed duplicate header line
   foreach ($pdo->query('SELECT id,title,author,isbn,category,year,publisher,quantity FROM books ORDER BY id') as $row) {
-    fputcsv($out, $row);
+  fputcsv($out, $row, ',', '"', '\\');
   }
   exit;
 }
@@ -20,13 +21,13 @@ if (isset($_GET['export']) && $_GET['export']==='issued_csv') {
   header('Content-Type: text/csv');
   header('Content-Disposition: attachment; filename="issued_books.csv"');
   $out = fopen('php://output', 'w');
-  fputcsv($out, ['Issue ID','Student','Book','Issue Date','Due Date','Return Date','Fine']);
+  fputcsv($out, ['Issue ID','Student','Book','Issue Date','Due Date','Return Date','Fine'], ',', '"', '\\');
   $sql = 'SELECT ib.id, s.name AS student, b.title AS book, ib.issue_date, ib.due_date, ib.return_date, ib.fine
           FROM issued_books ib
           JOIN students s ON s.id=ib.student_id
           JOIN books b ON b.id=ib.book_id
           ORDER BY ib.id';
-  foreach ($pdo->query($sql) as $row) { fputcsv($out, $row); }
+  foreach ($pdo->query($sql) as $row) { fputcsv($out, $row, ',', '"', '\\'); }
   exit;
 }
 
@@ -35,14 +36,14 @@ if (isset($_GET['export']) && $_GET['export']==='overdue_csv') {
   header('Content-Type: text/csv');
   header('Content-Disposition: attachment; filename="overdue.csv"');
   $out = fopen('php://output', 'w');
-  fputcsv($out, ['Issue ID','Student','Book','Due Date','Days Late']);
+  fputcsv($out, ['Issue ID','Student','Book','Due Date','Days Late'], ',', '"', '\\');
   $sql = "SELECT ib.id, s.name AS student, b.title AS book, ib.due_date, DATEDIFF(CURDATE(), ib.due_date) AS late
           FROM issued_books ib
           JOIN students s ON s.id=ib.student_id
           JOIN books b ON b.id=ib.book_id
           WHERE ib.return_date IS NULL AND ib.due_date < CURDATE()
           ORDER BY late DESC";
-  foreach ($pdo->query($sql) as $row) { fputcsv($out, $row); }
+  foreach ($pdo->query($sql) as $row) { fputcsv($out, $row, ',', '"', '\\'); }
   exit;
 }
 
